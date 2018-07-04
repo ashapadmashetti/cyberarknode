@@ -30,8 +30,7 @@ exports.findAll = function(req, res) {
         ]).toArray(function(err, doc) {
         if (err) throw err;
         console.log(JSON.stringify(doc));
-        res.send(doc)
-        db.close();
+        res.send(doc);
       });
     };
  

@@ -75,3 +75,44 @@ exports.deletehack = function(req, res) {
         });
    // });
 }
+
+exports.findAllTeamsByHack = function(req, res) {
+    console.log('Retrieving All Teams along with Hackathon Info');
+    mycollection.aggregate([
+        { $lookup:
+           {
+             from: 'HACK_TEAM',
+             localField: '_id',
+             foreignField: 'hack_id',
+             as: 'team_info'
+           }
+         }
+        ]).toArray(function(err, doc) {
+        if (err) throw err;
+        console.log(JSON.stringify(doc));
+        res.send(doc);
+      });
+    };
+
+exports.findAllTeamsByHackId = function(req, res) {
+        console.log('Retrieving All Teams for a hackathon');
+        mycollection.aggregate([
+            { $lookup:
+               {
+                 from: 'HACK_TEAM',
+                 localField: '_id',
+                 foreignField: 'hack_id',
+                 as: 'team_info'
+               }
+             },
+             {
+                $match:{
+                   "_id": mongojs.ObjectId(req.params.id)
+                }
+             }
+            ]).toArray(function(err, doc) {
+            if (err) throw err;
+            console.log(JSON.stringify(doc));
+            res.send(doc);
+          });
+        };
