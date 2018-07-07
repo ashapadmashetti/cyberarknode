@@ -119,7 +119,7 @@ exports.deleteteam = function(req, res) {
 }
 
 exports.findTeamsByUser = function(req, res) {
-    console.log('Retrieving Hackathons list');
+    console.log('Retrieving Teams list for user');
     console.log(req.params.id);
 mycollection.find({participant_ids : new RegExp(req.params.id, 'i')}).toArray(function (err, docs) {
         if (err) {
@@ -130,4 +130,32 @@ mycollection.find({participant_ids : new RegExp(req.params.id, 'i')}).toArray(fu
             res.send(docs);
         } 
     })
-};  
+}; 
+
+exports.findHacksByUser = function(req, res) {
+    console.log('Retrieving Hacks list for user');
+    console.log(req.params.id);
+mycollection
+    .aggregate([
+    { $lookup:
+        {
+          from: 'HACK_MASTER',
+          localField: 'hack_id',
+          foreignField: '_id',
+          as: 'hack_info'
+        }
+    },
+    {$match:
+        {'participant_ids': new RegExp(req.params.id,'i')} 
+    }
+    ])
+        .toArray(function (err, docs) {
+        if (err) {
+            res.send({'error':'An error has occurred'});
+        } else {
+            console.log('Success: ' + JSON.stringify(docs));
+
+            res.send(docs);
+        } 
+    })
+}; 
