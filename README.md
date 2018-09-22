@@ -20,3 +20,5 @@
     
   </system.webServer>
 </configuration>
+
+https://empakondapalli2.service-now.com/api/now/v2/table/cmdb_ci_business_capability?sysparm_fields=sys_id,name,parent,short_description,active
